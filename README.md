@@ -8,13 +8,13 @@ Refer to the singularity [website](https://singularity.lbl.gov/install-linux) to
 ## 3. Run go command for GO enrichment analysis
 - For information about the arguments of go command:
 
-`go -h`
+`$ go -h`
 
 - To Run the command itself, refer to this toy example:
 
-`cd ${path_of_code}`
+`$ cd ${path_of_code}`
 
-`go.sh --p_net_in ${path_of_network} --flag_singularity ON --p_singularity_bindpath ${path_of_data} --p_singularity_img ${path_of_singularity_image} --p_src_code ${path_of_code} ` 
+`$ go.sh --p_net_in ${path_of_network} --flag_singularity ON --p_singularity_bindpath ${path_of_data} --p_singularity_img ${path_of_singularity_image} --p_src_code ${path_of_code} ` 
 
 # Method 2: The more advanced, via installing all required dependencing
 ## 1. Install required packages
