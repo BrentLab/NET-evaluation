@@ -6,6 +6,8 @@ This package is for network evaluation with two methods: (1) binding data, and (
 Refer to the singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
 ## 2. Download singularity container from [here]()
 ## 3. Run go command for GO enrichment analysis
+For information about the arguments of go command, type: `go -h`
+To Run the command itself, refer to this toy example:
 `cd ${path_of_code}`
 
 `go.sh --p_net_in ${path_of_network} --flag_singularity ON --p_singularity_bindpath ${path_of_data} --p_singularity_img ${path_of_singularity_image} --p_src_code ${path_of_code} ` 
