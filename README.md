@@ -8,7 +8,7 @@ Refer to the singularity [website](https://singularity.lbl.gov/install-linux) to
 ## 3. Run go command for GO enrichment analysis
 - For information/help  about the arguments of go command:
 
-`$ go -h`
+`$ /path/singularity/container/evaluate_net/go -h`
 
 - To Run the command, refer to this toy example once singularity is installed & sinuglarity container is downloaded :
 
