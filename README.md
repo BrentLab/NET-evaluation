@@ -18,7 +18,7 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 
 # Method 2: The more advanced, via installing all required dependencing
 ## 1. Install required packages
-Install `R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) tutorial for info about how to install R
+`R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) tutorial for info about how to install R
 
 `$ R`
 
@@ -29,3 +29,6 @@ Install `R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials
 `install.packages("optparse"`
 
 ## 2. Run go command for GO enrichment analysis
+`$ cd /path/of/code/`
+
+`$ /path/of/code/go --p_net /path/of/network --flag_singularity OFF  --p_eval /home/output/zev_go.tsv ` 
