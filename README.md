@@ -12,9 +12,9 @@ Refer to the singularity [website](https://singularity.lbl.gov/install-linux) to
 
 - To Run the command, refer to this toy example once singularity is installed & sinuglarity container is downloaded :
 
-`$ cd ${path_of_code}`
+`$ cd /path/singularity/container`
 
-`$ go.sh --p_net_in ${path_of_network} --flag_singularity ON --p_singularity_bindpath ${path_of_data} --p_singularity_img ${path_of_singularity_image} --p_src_code ${path_of_code} ` 
+`$ /path/singularity/container/home/evaluate_net/go --p_net /home/data/zev.tsv --flag_singularity ON --p_singularity_img /path/singularity/container --p_eval /home/output/zev_go.tsv ` 
 
 # Method 2: The more advanced, via installing all required dependencing
 ## 1. Install required packages
