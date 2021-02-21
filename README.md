@@ -6,15 +6,13 @@ This package is for network evaluation with two methods: (1) binding data, and (
 Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
 ## 2. Download singularity container from [here](https://www.dropbox.com/sh/04fnshj2stcgalt/AADjwy85iAD4HN_oYwZOLDCia?dl=0)
 ## 3. Run go command for GO enrichment analysis
-- For info & help about the **go** command:
+- For info & help about the command of **go**:
 
 `$ /path/of/singularity/container/home/NET-evaluate/go -h`
 
-- To Run the go command, refer to this toy example once singularity is installed & sinuglarity container is downloaded :
+- To run the command of **go**, run this toy example once singularity is installed and the container is downloaded from the link above:
 
-`$ cd /path/singularity/container`
-
-`$ /path/singularity/container/home/evaluate_net/go --p_net /home/data/zev.tsv --flag_singularity ON --p_singularity_img /path/singularity/container --p_eval /home/output/zev_go.tsv ` 
+`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /home/toy_example/zev.tsv --flag_singularity ON --p_singularity_img /path/of/singularity/container --p_eval /home/toy_example/zev_go.tsv ` 
 
 # Method 2: The more advanced, via installing all required dependencing
 ## 1. Install required packages
