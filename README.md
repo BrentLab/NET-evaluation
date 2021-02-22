@@ -1,7 +1,7 @@
 # NET-evaluation
 This package is for network evaluation with: (1) binding data, and (2) Gene Ontology analysis. The easiest way to run this package is with **singularity container**. Singularity makes it super easy, no need to install any more packages once singularity is installed on your computer. Follow steps below for running our package with singularity.  
 
-# Method 1: The easiet
+# I. Run NET-evaluation with singularity (The easiet)
 ## 1. Install Singularity
 Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
 ## 2. Download singularity container from [here]()
@@ -23,9 +23,12 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 
 `$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_binding.tsv`
 
-# Method 2: More advanced
+# II. Run NET-evaluation with installing all dependencing (More advanced)
 ## 1. Install required packages
-`R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) tutorial for info about how to install R
+### 1.1 Install R and depedencies
+`R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) tutorial on how to install R
+
+Once R is installed, install required packages, run:
 
 `$ R`
 
@@ -34,6 +37,15 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 `install.packages("rjson")`
 
 `install.packages("optparse")`
+
+### 1.2 Install python and dependencies
+'Anaconda 3, refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
+
+Once anaconda 3 is installed, run:
+
+`$ conda create -n np3 python=3.7 pandas`
+
+`$ conda activate np3`
 
 ## 2. Run netowrk evaluation
 ### 2.1 GO enrichment analysis
