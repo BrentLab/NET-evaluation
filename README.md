@@ -1,7 +1,7 @@
 # NET-evaluation
 This package is for network evaluation with: (1) binding data, and (2) Gene Ontology analysis. The easiest way to run this package is with **singularity container**. Singularity makes it super easy, no need to install any more packages once singularity is installed on your computer. Follow steps below for running our package with singularity.  
 
-# I. Run NET-evaluation with singularity (The easiet)
+# I. With singularity (The easiet)
 ## 1. Install Singularity
 Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
 ## 2. Download singularity container from [here]()
@@ -23,7 +23,7 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 
 `$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_binding.tsv`
 
-# II. Run NET-evaluation with installing all dependencing (More advanced)
+# II. With installing all dependencing (More advanced)
 ## 1. Install required packages
 ### 1.1 Install R and depedencies
 `R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) tutorial on how to install R
@@ -55,7 +55,7 @@ Once anaconda 3 is installed, run:
 
 - To run the command, you can start with this toy example:
 
-`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_go.tsv ` 
+`$ /path/of/code/NET-evaluation/evaluate_with_go --p_net /path/of/code/NET-evaluation/toy_example/zev.tsv --flag_singularity OFF --p_eval /path/of/output/directory/zev_go.tsv ` 
 ### 2.2 With Binding data
 - For info & help about the command:
 
@@ -63,4 +63,4 @@ Once anaconda 3 is installed, run:
 
 - To run the command, you can start with this toy example:
 
-`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_binding.tsv`
+`$ /path/of/code/NET-evaluation/evaluate_with_binding --p_net /path/of/code/NET-evaluation/toy_example/zev.tsv --flag_singularity OFF --p_eval /path/of/output/directory/zev_binding.tsv`
