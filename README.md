@@ -13,7 +13,7 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 
 - To run the command, you can start with this toy example:
 
-`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container --p_eval /path/of/singularity/container/home/toy_example/zev_go.tsv ` 
+`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_go.tsv ` 
 ### 3.2 With Binding data
 - For info & help about the command:
 
@@ -21,7 +21,7 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 
 - To run the command, you can start with this toy example:
 
-`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_eval /path/of/singularity/container/home/toy_example/zev_binding.tsv`
+`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_binding.tsv`
 
 # Method 2: More advanced
 ## 1. Install required packages
