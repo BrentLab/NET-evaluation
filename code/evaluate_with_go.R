@@ -1,47 +1,51 @@
 calculate_pvalue = function(l_target
                             , flag_save_intermediate
                             , p_intermediate
-                            , enrich_method
+                            , enrichMethod
                             , organism
-                            , enrich_database
-                            , interest_gene_type
-                            , reference_set
-                            , reference_gene_type
-                            , sig_method
-                            , set_cover_num
-                            , fdr_threshold
-                            , top_threshold
-                            , min_num
-                            , max_num){
+                            , enrichDatabase
+                            , interestGeneType
+                            , referenceSet
+                            , referenceGeneType
+                            , sigMethod
+                            , setCoverNum
+                            , fdrThr
+                            , topThr
+                            , minNum
+                            , maxNum){
   pvalue=tryCatch({
-    df_go = WebGestaltR(enrichMethod=enrich_method
+      df_go = WebGestaltR(enrichMethod=enrichMethod
                         , organism=organism
-                        , enrichDatabase=enrich_database
+                        , enrichDatabase=enrichDatabase
                         , interestGene=l_target
-                        , interestGeneType=interest_gene_type
-                        , referenceSet=reference_set
-                        , referenceGeneType=reference_gene_type
+                        , interestGeneType=interestGeneType
+                        , referenceSet=referenceSet
+                        , referenceGeneType=referenceGeneType
                         , isOutput=FALSE
                         , projectName=NULL
-                        , sigMethod=sig_method
-                        , setCoverNum =set_cover_num
-                        , fdrThr=fdr_threshold
-                        , topThr=top_threshold
+                        , sigMethod=sigMethod
+                        , setCoverNum =setCoverNum
+                        , fdrThr=fdrThr
+                        , topThr=topThr
                       )
-    pvalue = df_go[1, "pValue"]
+      if (dim(df_go)[1] < 1){
+          pvalue = 1
+      } else {
+          pvalue = df_go[1, "pValue"]
+          if (flag_save_intermediate == "ON"){
+                write.table(
+                  file=p_intermediate
+                  , x=df_go
+                  , row.names=FALSE, col.names=TRUE,  sep='\t', quote=FALSE)
+          }
+      }
+      pvalue
+
   }, error = function(err){
     pvalue = 1
-  }, finally = {
-    pvalue
+
   })
-  
-  if (flag_save_intermediate == "ON"){
-    write.table(
-      file=p_intermediate
-      , x=df_go
-      , row.names=FALSE, col.names=TRUE,  sep='\t', quote=FALSE)
-  }
-  pvalue
+ pvalue
 }
 calculate_sum_minus_log_pvalues = function(p_net
                                            , flag_match
@@ -51,18 +55,18 @@ calculate_sum_minus_log_pvalues = function(p_net
                                            , flag_save_intermediate
                                            , p_dir_intermediate
                                            # WebGestaltR parameters
-                                           , enrich_method
+                                           , enrichMethod
                                            , organism
-                                           , enrich_database
-                                           , interest_gene_type
-                                           , reference_set
-                                           , reference_gene_type
-                                           , sig_method
-                                           , set_cover_num
-                                           , fdr_threshold
-                                           , top_threshold
-                                           , min_num
-                                           , max_num
+                                           , enrichDatabase
+                                           , interestGeneType
+                                           , referenceSet
+                                           , referenceGeneType
+                                           , sigMethod
+                                           , setCoverNum
+                                           , fdrThr
+                                           , topThr
+                                           , minNum
+                                           , maxNum
                                            ){
   if (flag_match == "ON"){
     d_match = fromJSON(paste(readLines(p_dict_match), collapse=""))
@@ -84,18 +88,18 @@ calculate_sum_minus_log_pvalues = function(p_net
                               , flag_save_intermediate=flag_save_intermediate
                               , p_intermediate=paste(p_dir_intermediate, paste(reg, ".tsv", sep=""), sep="") 
                               # WebGestaltR parameters
-                              , enrich_method=enrich_method
+                              , enrichMethod=enrichMethod
                               , organism=organism
-                              , enrich_database=enrich_database
-                              , interest_gene_type=interest_gene_type
-                              , reference_set=reference_set
-                              , reference_gene_type=reference_gene_type
-                              , sig_method=sig_method
-                              , set_cover_num=set_cover_num
-                              , fdr_threshold=fdr_threshold
-                              , top_threshold=top_threshold
-                              , min_num=min_num
-                              , max_num=max_num
+                              , enrichDatabase=enrichDatabase
+                              , interestGeneType=interestGeneType
+                              , referenceSet=referenceSet
+                              , referenceGeneType=referenceGeneType
+                              , sigMethod=sigMethod
+                              , setCoverNum=setCoverNum
+                              , fdrThr=fdrThr
+                              , topThr=topThr
+                              , minNum=minNum
+                              , maxNum=maxNum
                               )
     if (!is.null(pvalue)){
       sum = sum -log(pvalue)
@@ -112,70 +116,60 @@ calculate_sum_minus_log_pvalues = function(p_net
 if (sys.nframe() == 0){
   # =========================================== #
   # |       *** Install packages ***          | #
-  # =========================================== #
-  if (!require(optparse)){
-    install.packages("optparse", repo="http://cran.rstudio.com/")
-    library("optparse")
-  }
-  
-  if (!require(rjson)){
-    install.packages("rjson")
-    library("rjson")
-  }
-  
-  if (!require("WebGestaltR")){
-    install.packages("WebGestaltR")
-    library("WebGestaltR")
-  }
+  # =========================================== #  
+  library("optparse")
+  library("rjson")
+  library("WebGestaltR")
   
   # =========================================== #
   # |         **** Parse Arguments ****       | #
   # =========================================== #
   opt_parser = OptionParser(option_list=list(
-    p_in_net = make_option(c("--p_in_net"), type="character")
+    p_net = make_option(c("--p_net"), type="character")
+    , flag_singularity = make_option(c("--flag_singularity"), type="character")
     , flag_match = make_option(c("--flag_match"))
     , p_dict_match = make_option(c("--p_dict_match"))
-    , p_out_eval = make_option(c("--p_out_eval"))
+    , p_eval = make_option(c("--p_eval"))
     , flag_save_intermediate = make_option(c("--flag_save_intermediate"))
     , p_dir_intermediate = make_option(c("--p_dir_intermediate"))
     , nbr_edges_per_reg = make_option(c("--nbr_edges_per_reg"), type="integer", default=100)
     
     # WebGestaltR
-    , enrich_method = make_option(c("--enrich_method"), type="character", default="ORA")
+    , enrichMethod = make_option(c("--enrichMethod"), type="character", default="ORA")
     , organism = make_option(c("--organism"), type="character", default="scerevisiae")
-    , enrich_database = make_option(c("--enrich_database"), type="character", default="geneontology_Biological_Process_noRedundant")
-    , interest_gene_type = make_option(c("--interest_gene_type"), type="character", default="genesymbol")
-    , reference_set = make_option(c("--reference_set"), type="character", default="genome_protein-coding")
-    , reference_gene_type = make_option(c("--reference_gene_type"), type="character", default="genesymbol")
-    , sig_method = make_option(c("--sig_method"), type="character", default="fdr")
-    , set_cover_num = make_option(c("--set_cover_num"), type="integer", default=10)
-    , fdr_threshold = make_option(c("--fdr_threshold"), type="double", default=0.05)
-    , top_threshold = make_option(c("--top_threshold"), type="integer", default=10)
-    , min_num = make_option(c("--min_num"), type="integer", default=10)
-    , max_num = make_option(c("--max_num"), type="integer", default=500)
+    , enrichDatabase = make_option(c("--enrichDatabase"), type="character", default="geneontology_Biological_Process_noRedundant")
+    , interestGeneType = make_option(c("--interestGeneType"), type="character", default="genesymbol")
+    , referenceSet = make_option(c("--referenceSet"), type="character", default="genome_protein-coding")
+    , referenceGeneType = make_option(c("--referenceGeneType"), type="character", default="genesymbol")
+    , sigMethod = make_option(c("--sigMethod"), type="character", default="fdr")
+    , setCoverNum = make_option(c("--setCoverNum"), type="integer", default=10)
+    , fdrThr = make_option(c("--fdrThr"), type="double", default=0.05)
+    , topThr = make_option(c("--topThr"), type="integer", default=10)
+    , minNum = make_option(c("--minNum"), type="integer", default=10)
+    , maxNum = make_option(c("--maxNum"), type="integer", default=500)
    ))
   opt = parse_args(opt_parser, positional_arguments = TRUE)$options
   
-  calculate_sum_minus_log_pvalues(p_net=opt$p_in_net
+  calculate_sum_minus_log_pvalues(p_net=opt$p_net
                                   , flag_match=opt$flag_match
                                   , p_dict_match=opt$p_dict_match
-                                  , p_eval=opt$p_out_eval
+                                  , p_eval=opt$p_eval
                                   , nbr_edges_per_reg=opt$nbr_edges_per_reg
                                   , flag_save_intermediate=opt$flag_save_intermediate
                                   , p_dir_intermediate=opt$p_dir_intermediate 
                                   # WebGestaltR parameters
-                                  , enrich_method=opt$enrich_method
+                                  , enrichMethod=opt$enrichMethod
                                   , organism=opt$organism
-                                  , enrich_database=opt$enrich_database
-                                  , interest_gene_type=opt$interest_gene_type
-                                  , reference_set=opt$reference_set
-                                  , reference_gene_type=opt$reference_gene_type
-                                  , sig_method=opt$sig_method
-                                  , set_cover_num=opt$set_cover_num
-                                  , fdr_threshold=opt$fdr_threshold
-                                  , top_threshold=opt$top_threshold
-                                  , min_num=opt$min_num
-                                  , max_num=opt$max_num
+                                  , enrichDatabase=opt$enrichDatabase
+                                  , interestGeneType=opt$interestGeneType
+                                  , referenceSet=opt$referenceSet
+                                  , referenceGeneType=opt$referenceGeneType
+                                  , sigMethod=opt$sigMethod
+                                  , setCoverNum=opt$setCoverNum
+                                  , fdrThr=opt$fdrThr
+                                  , topThr=opt$topThr
+                                  , minNum=opt$minNum
+                                  , maxNum=opt$maxNum
                                   )
 }
 
