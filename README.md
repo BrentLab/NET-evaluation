@@ -7,13 +7,21 @@ Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to ins
 ## 2. Download singularity container from [here]()
 ## 3. Run network evaluation
 ### 3.1 GO enrichement analysis
-- For info & help about the **go** :
+- For info & help about the command:
 
-`$ /path/of/singularity/container/home/NET-evaluate/go -h`
+`$ /path/of/singularity/container/home/NET-evaluate/evaluate_with_go -h`
 
 - To run the command, you can start with this toy example:
 
 `$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container --p_eval /path/of/singularity/container/home/toy_example/zev_go.tsv ` 
+### 3.2 With Binding data
+- For info & help about the command:
+
+`$ /path/of/singularity/container/home/NET-evaluate_with_binding -h`
+
+- To run the command, you can start with this toy example:
+
+`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_eval /path/of/singularity/container/home/toy_example/zev_binding.tsv`
 
 # Method 2: More advanced
 ## 1. Install required packages
