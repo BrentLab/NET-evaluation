@@ -2,9 +2,10 @@
 This package is for network evaluation with: (1) binding data, and (2) Gene Ontology analysis. The easiest way to run this package is with **singularity container**. Singularity makes it super easy, no need to install any more packages once singularity is installed on your computer. Follow steps below for running our package with singularity.  
 
 # I. The easiet, with Singularity container
-## 1. Install Singularity
-Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
-## 2. Download singularity container from [here]()
+## 1. Install Singularity and download container
+- Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
+- Download singularity container [here]()
+
 ## 3. Run NET-evaluation
 ### 3.1 GO enrichement analysis
 - For info & help about the command:
