@@ -72,7 +72,7 @@ then
     command+="singularity exec ${p_singularity_img} "
 fi
 
-command+="python ${p_src_code}code/evaluate_with_binding.py \
+command+="python3 ${p_src_code}code/evaluate_with_binding.py \
         --p_net ${p_net} \
         --fname_net ${fname_net} \
         --nbr_bins ${nbr_bins} \

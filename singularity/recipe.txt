@@ -1,0 +1,40 @@
+Bootstrap: docker
+From: ubuntu:18.04
+
+%help
+    Image for running NET-evaluation package
+    Brent Lab, Washington University in Saint Louis
+
+%post
+    apt-get update
+    apt-get upgrade -y
+    apt-get install vim -y
+    apt install curl -y
+    apt-get install python3.6 -y
+    apt install python3-pip -y
+    pip3 install pandas
+    apt-get install libcurl4-openssl-dev -y
+    apt-get install libssl-dev -y
+    apt-get install cmake libfreetype6-dev libfontconfig1-dev xclip -y
+    apt-get install libcairo2-dev libjpeg-dev libgif-dev -y
+    apt-get install r-base -y
+    R --slave -e 'install.packages("WebGestaltR")'
+    R --slave -e 'install.packages("rjson")'
+    R --slave -e 'install.packages("optparse")'
+
+# if we want to install anaconda3
+    # mkdir -p tmp
+    # cd tmp
+    # curl -O https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh
+    # bash Anaconda3-2019.03-Linux-x86_64.sh -b -u -p $HOME/anaconda3
+    # export PATH=/root/anaconda3/bin:$PATH    
+    # conda create --name np3 python=3.6 pandas
+
+%files
+    NET-evaluation /home/
+    toy_example /home/
+
+# if we want to install anaconda3 and to run environment
+#%environment
+#    export PATH=/root/anaconda3/bin:$PATH
+#    activate np3
