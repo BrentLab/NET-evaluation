@@ -15,7 +15,7 @@ This package is for network evaluation with: (1) binding data, and (2) Gene Onto
 - To run the command, you can start with this toy example:
 
 `$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_go.tsv ` 
-### 3.2 With Binding data
+### 3.2 Binding data
 - For info & help about the command:
 
 `$ /path/of/singularity/container/home/NET-evaluate_with_binding -h`
