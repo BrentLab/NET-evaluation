@@ -5,7 +5,7 @@ This package is for network evaluation with: (1) binding data, and (2) Gene Onto
 ## 1. Install Singularity
 Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity 2.4 or higher.
 ## 2. Download singularity container from [here]()
-## 3. Run network evaluation
+## 3. Run NET-evaluation
 ### 3.1 GO enrichement analysis
 - For info & help about the command:
 
@@ -47,7 +47,7 @@ Once anaconda 3 is installed, run:
 
 `$ conda activate np3`
 
-## 2. Run netowrk evaluation
+## 2. Run NET-evaluation
 ### 2.1 GO enrichement analysis
 - For info & help about the command:
 
