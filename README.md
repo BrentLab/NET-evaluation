@@ -4,7 +4,7 @@ This package is for network evaluation with: (1) binding data, and (2) Gene Onto
 # I. The easiet, with Singularity container
 ## 1. Install Singularity and download container
 - Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity >= 2.4
-- Download singularity container [here]()
+- Download singularity container [here](https://wustl.box.com/s/20hun6z03s0rejrilkvbs8jhged050vq)
 
 ## 3. Run Commands
 ### GO enrichement analysis
