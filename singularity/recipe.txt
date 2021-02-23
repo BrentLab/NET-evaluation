@@ -41,5 +41,5 @@ From: ubuntu:18.04
 
 # to build this container, compress, and extract
 # sudo singularity build --sandbox s_neteval recipe.txt
-# sudo tar -czvf s_neteval.tar.gz s_neteval
-# tar -xvf s_neteval.tar.gz
+# sudo tar -czf --hard-dereference s_neteval.tar.gz s_neteval
+# tar -xf s_neteval.tar.gz
