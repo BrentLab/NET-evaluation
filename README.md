@@ -40,15 +40,15 @@ Once R is installed, install required packages, run:
 `install.packages("optparse")`
 
 ### Install python and dependencies
-'Anaconda 3, refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
+To install python via Anaconda 3, refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
 
 Once anaconda 3 is installed, run:
 
-`$ conda create -n np3 python=3.7 pandas`
+`$ conda create -n neteval python=3.7 pandas`
 
-`$ conda activate np3`
+`$ conda activate neteval`
 
-## 2. Run NET-evaluation
+## 2. Run Commands
 ### GO enrichement analysis
 - For info & help about the command:
 
@@ -60,7 +60,7 @@ Once anaconda 3 is installed, run:
 ### With Binding data
 - For info & help about the command:
 
-`$ /path/of/singularity/container/home/NET-evaluate_with_binding -h`
+`$ /path/of/code/NET-evaluation/evaluate_with_binding -h`
 
 - To run the command, you can start with this toy example:
 
