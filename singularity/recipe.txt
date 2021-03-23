@@ -44,10 +44,8 @@ From: ubuntu:18.04
     toy_example /home/
     packages /home/
 
-# to build the container from recipe file
+
+# to build this container, compress, and extract
 # sudo singularity build --sandbox s_neteval recipe.txt
-# compress
-# sudo tar --hard-dereference -czf s_neteval.tar.gz s_neteval
-# decompress
 # sudo tar -czf --hard-dereference s_neteval.tar.gz s_neteval
 # tar -xf s_neteval.tar.gz
