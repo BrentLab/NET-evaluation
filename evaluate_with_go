@@ -1,4 +1,5 @@
 #!/bin/bash
+
 # ======================================================== #
 # |                    *** Usage ***                     | #
 # ======================================================== #
@@ -6,35 +7,15 @@ usage(){
 cat << EOF
     evaluate-network v1.0
     
-    go command for GO enrichment analysis: leverages WebGestalt R package
+    go command for GO enrichment analysis: leverages GO-TermFinder
     go [options]
     
     GENERAL arguments
     --p_net                   : path of file for input network, the format of network is a three column network |REGULATOR|TARGET|VALUE, with no header, (mandatory)
-    --flag_match              : ON or OFF, if the TFs are in systematic names, they have to match common names (mandatory, default ON)
-    --p_dict_match            : path of json file for matching systematic to common names (optional for yeast, otherwise mandatory)
-    --flag_save_intermediate  : ON or OFF, ON to save intermediate results for every TF in the network (optional, deffault OFF)
-    --p_dir_intermediate      : path of directory for intermediate results, only if flag_save_intermediate is ON (optional)
     --p_src_code              : path of directory for code, (mandatory only if flag_singularity OFF)
     --nbr_edges_per_reg       : number of edges per regulators (optional, default 100)
     --p_eval                  : path file of output evaluation (mandatory)
-    --flag_debug_B            : ON or OFF, if ON the bash command is printed (optional, default OFF)
-    --flag_debug_R            : ON or OFF, if ON the R command is printed (optional, default OFF)
-
-    WEBGESTALT arguments
-    --enrichMethod            : optional, default "ORA"
-    --organism                : optional, default "scerevisiae"
-    --enrichDatabase          : optional, default "geneontology_Biological_Process_noRedundant"
-    --interestGeneType        : optional, default "genesymbol"
-    --referenceSet            : optional, default "genome_protein-coding"
-    --referenceGeneType       : optional, default "genesymbol"
-    --sigMethod               : optional, default "fdr"
-    --setCoverNum             : optional, default 10
-    --fdrThr                  : optional, default 0.05
-    --topThr                  : optional, default 10
-    --minNum                  : optional, default 10
-    --maxNum                  : optional, default 500
-    
+   
     SINGULARITY arguments
     --flag_singularity        : ON or OFF, for singularity run (optional, default ON)
     --p_singularity_bindpath  : path for mounted directory to singularity container when data are located outsite the container (optional)
@@ -54,28 +35,11 @@ EOF
 # General arguments
 flag_slurm=OFF
 flag_singularity=ON
-flag_match=ON
-p_dict_match=NONE
-flag_save_intermediate=OFF
-p_dir_intermediate=NONE
-nbr_edges_per_reg=100
+flag_debug=OFF
+l_nbr_edges_per_reg=(20 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100)
 p_singularity_bindpath=/home/
-flag_debug_B=OFF
-flag_debug_R=OFF
+p_src_code=NONE
 
-# WebGestalt arguments
-enrichMethod="ORA"
-organism="scerevisiae"
-enrichDatabase="geneontology_Biological_Process_noRedundant"
-interestGeneType="genesymbol"
-referenceSet="genome_protein-coding"
-referenceGeneType="genesymbol"
-sigMethod="fdr"
-setCoverNum=10
-fdrThr=0.05
-topThr=10
-minNum=10
-maxNum=500
 
 # ======================================================== #
 # |               *** Parse Arguments ***                | #
@@ -93,71 +57,29 @@ do
                  p_net)
                      p_net="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
-                 flag_match)
-                     flag_match="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 p_dict_match)
-                     p_dict_match="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
                  p_eval)
                      p_eval="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
-                 flag_save_intermediate)
-                     flag_save_intermediate="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                 l_nbr_edges_per_reg)
+                     narg="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     l_nbr_edges_per_reg=("${narg}")
+                     
+                     for (( i=1;i<`expr ${narg}+1`;i++ ))
+                     do
+                         arg="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1))
+                         l_nbr_edges_per_reg+=("${arg}")
+                     done
                      ;;
-                 p_dir_intermediate)
-                     p_dir_intermediate="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 nbr_edges_per_reg)
-                     nbr_edges_per_reg="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                 p_dir_out)
+                     p_dir_out="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
                  p_src_code)
                      p_src_code="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
-                 flag_debug_B)
-                     flag_debug_B="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                 flag_debug)
+                     flag_debug="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
-                 flag_debug_R)
-                     flag_debug_R="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-
-                 # WEBGESTALT argumentss
-                 enrichMethod)
-                     enrichMethod="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 organism)
-                     organism="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 enrichDatabase)
-                     enrichDatabase="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 interestGeneType)
-                     interestGeneType="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 referenceSet)
-                     referenceSet="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 referenceGeneType)
-                     referenceGeneType="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 sigMethod)
-                     sigMethod="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 setCoverNum)
-                     setCoverNum="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 fdrThr)
-                     fdrThr="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 topThr)
-                     topThr="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 minNum)
-                     minNum="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
-                 maxNum)
-                     maxNum="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
-                     ;;
+                     
                  # SLURM arguments
                  flag_slurm)
                      flag_slurm="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
@@ -165,6 +87,7 @@ do
                  p_out_logs)
                      p_out_logs="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
+                     
                  # SINGULARITY arguments
                  flag_singularity)
                      flag_singularity="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
@@ -194,47 +117,27 @@ then
             -J eval_with_go "
 fi
 
-if [ ${flag_singularity} == "ON" ]
+if [ ${flag_singularity} == "ON" ] && [ ${p_src_code} == "NONE" ]
 then
     p_src_code=${p_singularity_img}/home/NET-evaluation/
 fi
 
-if [ ${p_dict_match} == "NONE" ]
-then
-    p_dict_match=${p_src_code}metadata/yeast_systematic_common.json
-fi
-
-command+="${p_src_code}wrapper/evaluate_with_go.sh \
+command+="${p_src_code}wrapper/evaluate_with_go_term_finder.sh \
             --p_net ${p_net} \
-            --flag_match ${flag_match} \
-            --p_dict_match ${p_dict_match} \
+            --l_nbr_edges_per_reg ${l_nbr_edges_per_reg[@]} \
+            --p_dir_out ${p_dir_out} \
             --p_eval ${p_eval} \
-            --flag_save_intermediate ${flag_save_intermediate} \
-            --p_dir_intermediate ${p_dir_intermediate} \
-            --nbr_edges_per_reg ${nbr_edges_per_reg} \
-            --enrichMethod ${enrichMethod} \
-            --organism ${organism} \
-            --enrichDatabase ${enrichDatabase} \
-            --interestGeneType ${interestGeneType} \
-            --referenceSet ${referenceSet} \
-            --referenceGeneType ${referenceGeneType} \
-            --sigMethod ${sigMethod} \
-            --setCoverNum ${setCoverNum} \
-            --fdrThr ${fdrThr} \
-            --topThr ${topThr} \
-            --minNum ${minNum} \
-            --maxNum ${maxNum} \
             --p_src_code ${p_src_code} \
             --flag_slurm ${flag_slurm} \
             --flag_singularity ${flag_singularity} \
             --p_singularity_bindpath ${p_singularity_bindpath} \
             --p_singularity_img ${p_singularity_img} \
-            --flag_debug_R ${flag_debug_R}"
+            --flag_debug ${flag_debug}"
 
 # ======================================================== #
 # |                *** Run Command ***                   | #
 # ======================================================== #
-if [ ${flag_debug_B} == "ON" ]
+if [ ${flag_debug} == "ON" ]
 then
     echo "${command}"
 fi
