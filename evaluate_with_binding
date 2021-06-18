@@ -38,8 +38,9 @@ nbr_bins=20
 nbr_edges_per_reg=100
 flag_singularity=ON
 p_singularity_bindpath=/home/
+p_singularity_img=NONE
 flag_slurm=OFF
-p_src_code=NONE
+p_src_code="$(cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)/"
 fname_net=network
 conda_env=np3
 p_binding_event=NONE
@@ -119,8 +120,8 @@ if [ ${flag_slurm} == "ON" ]
 then
     mkdir -p ${p_out_logs}
     command+="sbatch 
-            -o ${p_out_logs}eval_go_%J.out \
-            -e ${p_out_logs}eval_go_%J.err \
+            -o ${p_out_logs}eval_binding_%J.out \
+            -e ${p_out_logs}eval_binding_%J.err \
             -J eval_with_binding "
 fi
 

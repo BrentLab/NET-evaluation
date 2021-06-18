@@ -60,6 +60,7 @@ done
 if [ ${flag_slurm} == "ON" ]
 then
     source ${p_src_code}wrapper/helper_load_modules.sh
+    source activate ${conda_env}
 fi
 
 # ======================================================== #
@@ -88,5 +89,9 @@ then
     echo "${command}"
 fi
 eval ${command}
+
+if [ ${flag_slurm} == "ON" ] && [ ${flag_singularity} == "OFF" ]; then
+    source deactivate ${conda_env}
+fi
 
 
