@@ -21,7 +21,8 @@ def evaluate_network(p_net
     # read input networks that we want to evaluate
     if isinstance(p_net, str):
         if (p_net != "NONE"):
-            df_net = read_csv(p_net, header=None, sep='\t', low_memory=False)
+            df_net = read_csv(p_net, header=None, sep='\t', low_memory=False
+                             , error_bad_lines=False)
         else:
             exit()
     elif isinstance(p_net, DataFrame):
@@ -40,11 +41,10 @@ def evaluate_network(p_net
     df_net.index = [(reg, target) for reg, target in zip(list(df_net['REGULATOR']), df_net['TARGET'])]
     
     # get the regulators that do exist in binding data, and ignore the others 
-    l_reg = list(set(df_net.REGULATOR.to_list()))
     df_binding_event = read_csv(p_binding_event, header=0, sep='\t')
     df_net = df_net[df_net.REGULATOR.isin(list(set(df_binding_event.REGULATOR.to_list()))) 
                     & df_net.TARGET.isin(list(set(df_binding_event.TARGET.to_list())))]
-    
+    l_reg_binding = list(set(df_net[df_net.REGULATOR.isin(list(set(df_binding_event.REGULATOR.to_list())))].REGULATOR.to_list()))
     
     # ===================================================================== #
     # |                  *** Evaluation by Percentage ***                 | #
@@ -53,7 +53,7 @@ def evaluate_network(p_net
     df_binding_event.index = [(reg, target) for reg, target in zip(list(df_binding_event['REGULATOR']), df_binding_event['TARGET'])]
 
     # Calculate the number of predicted and supported edges
-    nbr_tf = len(l_reg)
+    nbr_tf = len(l_reg_binding)
     last_rank = int(nbr_tf * nbr_edges_per_reg)
     bin_size = int(last_rank/nbr_bins)
 
