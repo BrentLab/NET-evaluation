@@ -3,7 +3,7 @@ def calculate_performance_for_defined_bins(p_net
                                            , l_nbr_edges_per_reg
                                            , p_eval):
     from os import listdir
-    from pandas import Series, read_csv
+    from pandas import Series, read_csv, DataFrame
     import numpy as np
     
     # get the set of regulators
@@ -11,24 +11,28 @@ def calculate_performance_for_defined_bins(p_net
     df_net.columns = ['REGULATOR', 'TARGET', 'VALUE']
     nbr_reg = len(set(list(df_net.loc[:, 'REGULATOR'])))
     
-    l_score = []  # list of performance score
+    l_score, l_score_adjusted, l_sum_pvalue, l_nbr_tf = [], [], [], []  # list of performance score
     
     # loop over bins and calculate sum(-log(pvalue))
     for nbr_edges_per_reg in l_nbr_edges_per_reg:
         print(nbr_edges_per_reg)
-        sum_pvalue = 0
+        sum_pvalue, nbr_tf = 0, 0
         p_dir = p_dir_results + 'bin_' + str(nbr_edges_per_reg) + '/'
-        for targets_file in listdir(p_dir):
-            if targets_file.endswith('.tsv'):
-                df_go = read_csv(p_dir + targets_file, header=0, sep='\t')
-                
+        for tf_file in listdir(p_dir):
+            if tf_file.endswith('.tsv'):
+                df_go = read_csv(p_dir + tf_file, header=0, sep='\t')
                 df_go_pvalue = df_go.sort_values(ascending=True, by='CORRECTED P-VALUE').loc[:, 'CORRECTED P-VALUE']
-                pvalue = df_go_pvalue.iloc[0]
-                if not np.isnan(pvalue):
-                    sum_pvalue-=np.log(pvalue)
+                if df_go_pvalue.shape[0] > 0:
+                    pvalue = df_go_pvalue.iloc[0]
+                    if not np.isnan(pvalue):
+                        sum_pvalue-=np.log(pvalue)
+                        nbr_tf += 1 
         l_score.append(sum_pvalue/(nbr_edges_per_reg*nbr_reg))
-            
-    Series(l_score, name='score').T.to_csv(p_eval, header=False, index=False, sep='\t')       
+        l_score_adjusted.append(sum_pvalue/nbr_tf)
+        l_sum_pvalue.append(sum_pvalue)
+        l_nbr_tf.append(nbr_tf)
+
+    DataFrame([l_score, l_score_adjusted, l_sum_pvalue, l_nbr_tf], index=['score', 'score_adjusted', 'sum_pvalue', 'nbr_tf']).T.to_csv(p_eval, header=True, index=False, sep='\t')       
 
 
 def main():

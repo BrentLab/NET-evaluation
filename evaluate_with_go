@@ -114,6 +114,7 @@ then
     command+="sbatch \
             -o ${p_out_logs}eval_go_%J.out \
             -e ${p_out_logs}eval_go_%J.err \
+            --mem=30G \
             -J eval_with_go "
 fi
 
