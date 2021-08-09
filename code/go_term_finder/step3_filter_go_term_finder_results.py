@@ -8,10 +8,11 @@ def process_result_file_into_dataframe(p_file):
         for line in f.readlines():
             if line.startswith('-- '):
                 flag_start = True
-                go_id, term, corrected_pvalue, uncorrected_pvalue, fdr_rate, num_annotation, genes = [np.nan for _ in range(7)]
+                go_id, term, corrected_pvalue, uncorrected_pvalue, fdr_rate, num_annotation, genes, nb_gene_go = [np.nan for _ in range(8)]
             elif flag_start and line.startswith('\n'):
                 flag_start = False
-                l_go_entries.append([go_id, term, corrected_pvalue, uncorrected_pvalue, fdr_rate, num_annotation, genes])
+                fold_enrichment = nbr_gene_inter*7200/(nbr_gene_net*nbr_gene_go)
+                l_go_entries.append([go_id, term, corrected_pvalue, uncorrected_pvalue, fdr_rate, nbr_gene_inter, nbr_gene_net, nbr_gene_go, fold_enrichment, num_annotation, genes])
             elif flag_start:
                 if line.startswith('GOID'):
                     go_id = line.split('\t')[1]
@@ -31,12 +32,15 @@ def process_result_file_into_dataframe(p_file):
                 elif line.startswith('NUM_ANNOTATIONS'):
                     num_annotation = line.split('\t')[1]
                     num_annotation = num_annotation[0:num_annotation.find('\n')]
+                    nbr_gene_go = int(num_annotation.split(' ')[7])
+                    nbr_gene_net = int(num_annotation.split(' ')[2])
+                    nbr_gene_inter = int(num_annotation.split(' ')[0])
                 elif line.startswith('The genes annotated'):
                     continue
                 else:
                     genes = line
                     genes = genes[0:genes.find('\n')]
-    df_go =DataFrame(l_go_entries, columns=['GOID', 'TERM', 'CORRECTED P-VALUE', 'UNCORRECTED P-VALUE', 'FDR RATE', 'NUM ANNOTATION', 'GENES'])
+    df_go =DataFrame(l_go_entries, columns=['GOID', 'TERM', 'CORRECTED P-VALUE', 'UNCORRECTED P-VALUE', 'FDR RATE', 'NBR GENE INTER', 'NBR GENE NET', 'NBR GENE GO', 'FOLD ENRICHMENT', 'NUM ANNOTATION', 'GENES'])
     return df_go
     
 def filter_go_term_finder_results(p_dir_results
@@ -50,7 +54,9 @@ def filter_go_term_finder_results(p_dir_results
         if file.endswith('.terms'):
             df_go = process_result_file_into_dataframe(p_dir_results + file)
             df_go = df_go.loc[df_go['GOID'].isin(l_go_id_bio_process), :]
-            df_go = df_go.loc[df_go['FDR RATE'] <= 10, :]
+            df_go = df_go.loc[(df_go['FDR RATE'] <= 0.1) 
+                              & (df_go['NBR GENE GO'] < 300)
+                              & (df_go['NBR GENE GO'] > 4), :]
             if df_go.shape[0] > 0:
                 df_go.to_csv(p_dir_results + file[0:file.find('.terms')] + '.tsv', header=True, index=False, sep='\t')
             
