@@ -25,6 +25,7 @@ cat << EOF
     --flag_slurm              : ON or OFF, for SLURM run (optional, default OFF)
     --p_dir_logs              : path of directory for SLURM log files (mandatory if flag_slurm ON)
     
+    
 EOF
 }
 
@@ -39,7 +40,7 @@ flag_debug=OFF
 l_nbr_edges_per_reg=(20 5 10 15 20 25 30 35 40 45 50 55 60 65 70 75 80 85 90 95 100)
 p_singularity_bindpath=/home/
 p_src_code="$(cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)/"
-
+data=""
 
 # ======================================================== #
 # |               *** Parse Arguments ***                | #
@@ -87,6 +88,9 @@ do
                  p_out_logs)
                      p_out_logs="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
+                 data)
+                     data="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
                      
                  # SINGULARITY arguments
                  flag_singularity)
@@ -115,7 +119,9 @@ then
             -o ${p_out_logs}eval_go_%J.out \
             -e ${p_out_logs}eval_go_%J.err \
             --mem=30G \
-            -J eval_with_go "
+            -J eval_go_${data} \
+            -N 1 \
+            -n 5 "
 fi
 
 if [ ${flag_singularity} == "ON" ] && [ ${p_src_code} == "NONE" ]
