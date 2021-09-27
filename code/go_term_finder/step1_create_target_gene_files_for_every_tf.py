@@ -1,10 +1,21 @@
+def write_l_target_into_file(reg
+                            , p_dir_out
+                            , df_net):
+    df_target = df_net.loc[df_net['REGULATOR'] == reg, 'TARGET']
+    if df_target.shape[0] > 0:
+        df_target.to_csv(p_dir_out + reg, header=False, index=False)
+
+            
 def create_target_gene_files_for_every_tf(p_net
                                          , p_dir_out
                                          , nbr_edges_per_reg):
     from pandas import read_csv
     from os import makedirs, path
+    import multiprocessing as mp
+    
     df_net = read_csv(p_net, header=None, sep='\t')
     df_net.columns = ['REGULATOR', 'TARGET', 'VALUE']
+    df_net.loc[:, 'VALUE'] = abs(df_net.loc[:, 'VALUE'])  # take absolute values in case values + and -
     df_net_sorted = df_net.sort_values(ascending=False, by='VALUE')
     
     l_reg = set(list(df_net.loc[:, 'REGULATOR']))
@@ -12,10 +23,12 @@ def create_target_gene_files_for_every_tf(p_net
     
     if not path.exists(p_dir_out):
         makedirs(p_dir_out)
-    for reg in l_reg:
-        df_target = df_net.loc[df_net['REGULATOR'] == reg, 'TARGET']
-        if df_target.shape[0] > 0:
-            df_target.to_csv(p_dir_out + reg, header=False, index=False)
+        
+    pool = mp.Pool(20)
+    pool.starmap(write_l_target_into_file, [(reg, p_dir_out, df_net) for reg in l_reg])
+    pool.close()
+    pool.join()
+    
 
 def main():
     from argparse import ArgumentParser

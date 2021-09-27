@@ -137,7 +137,6 @@ run_go_term_finder(){
 # |        *** Loop over the list of bin size ***        | #
 # ======================================================== #
 nbr_cpu=$((( $(nproc --all) <= 6 )) && echo "$(nproc --all)" || echo "6")
-echo "nbr_cpu: ${nbr_cpu}"
 for (( i=0;i<${#l_nbr_edges_per_reg[@]}; i++ ))
 do
     echo "nbr_edges_per_reg: ${l_nbr_edges_per_reg[i]}"

@@ -29,7 +29,8 @@ def evaluate_network(p_net
         df_net = p_net
     # Change the shape of network to | Regulator | Target | Value |
     if df_net.shape[1] > 3:  # network is written in matrix, flatten the network
-        df_net = read_csv(p_net, header=0, index_col=0, sep='\t')
+        if isinstance(p_net, str):
+            df_net = read_csv(p_net, header=0, index_col=0, sep='\t')
         l_target = list(df_net.columns)
         if df_net.shape[1] > len(l_target):
             df_net = df_net.dropna(axis='columns')

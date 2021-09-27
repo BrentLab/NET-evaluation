@@ -4,19 +4,24 @@ def process_result_file_into_dataframe(p_file):
     
     l_go_entries = []
     with open(p_file, 'r') as f:
-        flag_start = False
+        flag_start_p, flag_start = False, False
         for line in f.readlines():
-            if line.startswith('-- '):
+            if line.startswith('Finding terms for P'):
+                flag_start_p = True
+            elif flag_start_p and line.startswith('-- '):
                 flag_start = True
                 go_id, term, corrected_pvalue, uncorrected_pvalue, fdr_rate, num_annotation, genes, nb_gene_go = [np.nan for _ in range(8)]
             elif flag_start and line.startswith('\n'):
                 flag_start = False
                 fold_enrichment = nbr_gene_inter*7200/(nbr_gene_net*nbr_gene_go)
                 l_go_entries.append([go_id, term, corrected_pvalue, uncorrected_pvalue, fdr_rate, nbr_gene_inter, nbr_gene_net, nbr_gene_go, fold_enrichment, num_annotation, genes])
+            elif line.startswith('Finding terms for C'):
+                flag_start_p = False
+                break
             elif flag_start:
                 if line.startswith('GOID'):
-                    go_id = line.split('\t')[1]
-                    go_id = go_id[0:go_id.find('\n')]
+                        go_id = line.split('\t')[1]
+                        go_id = go_id[0:go_id.find('\n')]
                 elif line.startswith('TERM'):
                     term = line.split('\t')[1]
                     term = term[0:term.find('\n')]
@@ -42,23 +47,28 @@ def process_result_file_into_dataframe(p_file):
                     genes = genes[0:genes.find('\n')]
     df_go =DataFrame(l_go_entries, columns=['GOID', 'TERM', 'CORRECTED P-VALUE', 'UNCORRECTED P-VALUE', 'FDR RATE', 'NBR GENE INTER', 'NBR GENE NET', 'NBR GENE GO', 'FOLD ENRICHMENT', 'NUM ANNOTATION', 'GENES'])
     return df_go
-    
+
+
+def write_filtered_go_into_file(file, p_dir_results):
+    df_go = process_result_file_into_dataframe(p_dir_results + file)
+    df_go = df_go.loc[(df_go['FDR RATE'] <= 0.1) 
+                      & (df_go['NBR GENE GO'] < 300)
+                      & (df_go['NBR GENE GO'] > 4), :]
+    if df_go.shape[0] > 0:
+        df_go.to_csv(p_dir_results + file[0:file.find('.terms')] + '.tsv', header=True, index=False, sep='\t')
+
+        
 def filter_go_term_finder_results(p_dir_results
                                  , p_metadata):
     from os import listdir
     from pandas import read_csv
+    import multiprocessing as mp
     
-    df_metadata = read_csv(p_metadata, header=0, sep='\t')
-    l_go_id_bio_process = list(set(list(df_metadata.loc[df_metadata['namespace']== 'biological_process', 'id'])))
-    for file in listdir(p_dir_results):
-        if file.endswith('.terms'):
-            df_go = process_result_file_into_dataframe(p_dir_results + file)
-            df_go = df_go.loc[df_go['GOID'].isin(l_go_id_bio_process), :]
-            df_go = df_go.loc[(df_go['FDR RATE'] <= 0.1) 
-                              & (df_go['NBR GENE GO'] < 300)
-                              & (df_go['NBR GENE GO'] > 4), :]
-            if df_go.shape[0] > 0:
-                df_go.to_csv(p_dir_results + file[0:file.find('.terms')] + '.tsv', header=True, index=False, sep='\t')
+    pool = mp.Pool(20)
+    pool.starmap(write_filtered_go_into_file
+                 , [(file, p_dir_results) for file in listdir(p_dir_results) if file.endswith('.terms')])
+    pool.close()
+    pool.join()
             
 
 def main():
