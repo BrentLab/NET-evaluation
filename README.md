@@ -1,22 +1,35 @@
 # NET-evaluation
-This package is for network evaluation with: (1) binding data, and (2) Gene Ontology analysis. The easiest way to run this package is with **singularity container**. Singularity makes it super easy, no need to install any more packages once singularity is installed on your computer. Follow steps below for running our package with singularity.  
+A package for network evaluation, we provide three independent evaluation metrics: (1) binding, (2a) Gene Ontology (GO), (2b) GO-directness, and (3) PPI. For a detailed description of the metrics, please refer to our NetProphet3 paper [to provide the link once published]. The easiest way to run this package is with the **singularity container** provided below. The advantage of the container is that there is no need for installing any dependency software except for the singularity software itself. Otherwise, users can still run this package the old way by installing all dependencies (which can be tedious).  
 
-# I. The easiet, with Singularity container
-## 1. Install Singularity and download container
-- Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity >= 2.4
-- Download singularity container [here](https://wustl.box.com/s/20hun6z03s0rejrilkvbs8jhged050vq) and extract the tar file
+# I. The easiet, with the Singularity container
+## 1. Install Singularity and download the container
+- Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity >= 3.6.2
+- Download singularity container [to check instructions in NP3 package page]
 
-`$ tar -xf /path/of/singularity/container.tar.gz`
+## 2. Clone NET-evaluation repository
+`git clone [find url]`
 
 ## 3. Run Commands
-### GO enrichement analysis
+There are four different evaluation commands for (1) binding, (2) GO, (3) GO-directness and (4) PPI. There is a sample code for running each of the commands in `toy_example/run.sh`. Below, only the binding command is explained thouroughly, but the other commands follow the same principles.
+### the binding command:
+
+`p_src_code="/path/of/code/that/was/cloned/from/directroy/"`
+`p_singularity_img="/path/of/singularity/container/"`
+
 - For info & help about the command:
 
-`$ /path/of/singularity/container/home/NET-evaluate/evaluate_with_go -h`
+`$ ${p_src_code}binding -h`
 
-- To run the command, you can start with this toy example:
+- For running the command:
 
-`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_go --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_go.tsv ` 
+```
+$ ${p_src_code}binding \
+    --p_in_net '${p_src_code}toy_example/zev.tsv' \
+    --p_binding_event ${p_src_code}metadata/yeast/reg_target \
+    --
+```
+    
+    /zev.tsv --p_singularity_img /path/of/singularity/container --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_go.tsv ` 
 ### Binding data
 - For info & help about the command:
 
