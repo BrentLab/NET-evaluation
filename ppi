@@ -1,0 +1,157 @@
+#!/bin/bash
+# ======================================================== #
+# |                    *** Usage ***                     | #
+# ======================================================== #
+usage(){
+cat << EOF
+    evaluate-network v1.0
+    
+    PPI command for evaluating network with PPI STRING database
+    PPI [options]
+    
+    GENERAL arguments
+    --p_in_net                : path of file for input network, three-columns tab separated file for regulators, targets and edge scores. No header for this file (mandatory).
+    --nbr_top_edges           : number of top (TF, TF) edges that will be evaluated (optional, default 100)
+    --nbr_edges_per_threshold : number of (TF, TF) edges evaluated in the first threshold (optional, default 10)
+    --threshold               : the threshold that will be used to define the top edges that will be evaluated (optinal, default 25)
+    --p_STRING_db             : path of string database file downloaded from https://string-db.org (optional). There a sample of this file in the metadata folder (4932.protein.links.v11.5.txt)
+    --STRING_confidence       : threshold on STRING score, so an edge is considered supported
+    --conda_env               : conda environment that will be used (optional)
+    --p_out_eval              : path of output file for evaluation (mandatory)
+    --flag_debug              : ON or OFF, if ON commands will be printed so debuging is easier (optional, default OFF)
+    
+    SINGULARITY arguments
+    --flag_singularity        : ON or OFF, for singularity run (optional, default ON)
+    --p_singularity_bindpath  : path of mounted directory to singularity container (optional)
+    --p_singularity_img       : path of directory for singularity containerr image provided in github page (mandatory, if flag_singularity is ON)  
+   
+    SLURM arguments
+    --flag_slurm              : ON or OFF, for SLURM run (optional, default OFF)
+    --p_dir_logs              : path of directory for SLURM log files (mandatory, only if flag_slurm is ON)
+    
+EOF
+}
+
+# ======================================================== #
+# |         *** Define Default Arguments ***             | #
+# ======================================================== #
+nbr_top_edges=100
+nbr_edges_per_threshold=10
+threshold=25
+p_src_code="$(cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)/"
+conda_env=np3
+p_STRING_db=NONE
+STRING_confidence=700
+flag_slurm=OFF
+flag_singularity=ON
+p_singularity_bindpath=/home/
+p_singularity_img=NONE
+flag_debug=OFF
+
+# ======================================================== #
+# |               *** Parse Arguments ***                | #
+# ======================================================== #
+while getopts ":h-:" OPTION
+do
+    case "${OPTION}" in
+        h)
+            usage
+            exit 2
+            ;;
+        -)
+            case "${OPTARG}" in
+                 # GENERAL arguments
+                 p_in_net)
+                     p_in_net="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 p_out_eval)
+                     p_out_eval="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 nbr_top_edges)
+                     nbr_top_edges="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 nbr_edges_per_threshold)
+                     nbr_edges_per_threshold="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 threshold)
+                     threshold="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 conda_env)
+                     conda_env="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 p_STRING_db)
+                     p_STRING_db="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 STRING_confidence)
+                     STRING_confidence="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 flag_debug)
+                     flag_debug="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                     
+                 # SLURM arguments
+                 flag_slurm)
+                     flag_slurm="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 p_out_logs)
+                     p_out_logs="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 
+                 # SINGULARITY arguments
+                 flag_singularity)
+                     flag_singularity="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 p_singularity_bindpath)
+                     p_singularity_bindpath="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 p_singularity_img)
+                     p_singularity_img="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+            esac;;
+    esac
+done
+
+# ======================================================== #
+# |              *** Define Command ***                  | #
+# ======================================================== #
+
+command=""
+
+if [ ${flag_slurm} == "ON" ]
+then
+    mkdir -p ${p_out_logs}
+    command+="sbatch 
+            -o ${p_out_logs}eval_ppi_%J.out \
+            -e ${p_out_logs}eval_ppi_%J.err \
+            -J eval_with_ppi "
+fi
+
+if [ ${p_STRING_db} == "NONE" ]
+then
+    p_STRING_db=${p_src_code}/metadata/yeast/4932.protein.links.v11.5.txt
+fi
+
+command+="${p_src_code}wrapper/ppi.sh \
+            --p_in_net ${p_in_net} \
+            --nbr_top_edges ${nbr_top_edges} \
+            --nbr_edges_per_threshold ${nbr_edges_per_threshold} \
+            --threshold ${threshold} \
+            --p_STRING_db ${p_STRING_db} \
+            --STRING_confidence ${STRING_confidence} \
+            --flag_slurm ${flag_slurm} \
+            --conda_env ${conda_env} \
+            --flag_singularity ${flag_singularity} \
+            --p_singularity_bindpath ${p_singularity_bindpath} \
+            --p_singularity_img ${p_singularity_img} \
+            --p_out_eval ${p_out_eval} \
+            --flag_debug ${flag_debug} \
+            --p_src_code ${p_src_code}"
+
+# ======================================================== #
+# |                *** Run Command ***                   | #
+# ======================================================== #
+if [ ${flag_debug} == "ON" ]
+then
+    echo "${command}"
+fi
+eval ${command}

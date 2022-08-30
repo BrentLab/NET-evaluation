@@ -7,3 +7,5 @@ singularity/zev_go.tsv
 old/
 packages/
 code/__pycache__/
+code/.ipynb_checkpoints/
+test/
