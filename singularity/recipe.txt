@@ -37,13 +37,12 @@ From: ubuntu:18.04
     cd GO-TermFinder-0.86
     perl Makefile.PL
     make
-    make test
     make install
     
 %files
-    NET-evaluation /home/
-    toy_example /home/
-    packages /home/
+    ../../NET-evaluation /home/
+    ../toy_example /home/
+    ../packages /home/
 
 
 # to build this container, compress, and extract
