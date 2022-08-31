@@ -7,76 +7,48 @@ A package for network evaluation, we provide three independent evaluation metric
 - Download singularity container [to check instructions in NP3 package page]
 
 ## 2. Clone NET-evaluation repository
-`git clone [find url]`
+`git clone https://github.com/BrentLab/NET-evaluation.git`
 
 ## 3. Run Commands
-There are four different evaluation commands for (1) binding, (2) GO, (3) GO-directness and (4) PPI. There is a sample code for running each of the commands in `toy_example/run.sh`. Below, only the binding command is explained thouroughly, but the other commands follow the same principles.
-### the binding command:
+There are four different evaluation commands for (1) binding, (2) GO, (3) GO-directness and (4) PPI. There is a sample code for running each of the commands in `toy_example/run.sh`. Below, we only explain the binding command in details, but the other commands follow the same principles. 
 
-`p_src_code="/path/of/code/that/was/cloned/from/directroy/"`
-`p_singularity_img="/path/of/singularity/container/"`
+- For command help:
 
-- For info & help about the command:
+`p_src_code="/path/of/code/that/was/cloned/from/github/repository"`
 
-`$ ${p_src_code}binding -h`
+`$ ${p_src_code}binding -h`        # for binding
+`$ ${p_src_code}go -h`             # for GO
+`$ ${p_src_code}go_directness -h`  # for GO-directness
+`$ ${p_src_code}ppi -h`            # for ppi
 
-- For running the command:
+- For running the binding command:
 
 ```
 $ ${p_src_code}binding \
-    --p_in_net '${p_src_code}toy_example/zev.tsv' \
-    --p_binding_event ${p_src_code}metadata/yeast/reg_target \
-    --
+    --p_in_net "${p_src_code}toy_example/zev.tsv" \
+    --nbr_top_edges 50 \
+    --nbr_edges_per_threshold 5 \
+    --p_binding_event "${p_src_code}metadata/yeast/reg_target_cc_exo_chip_exclusive.txt" \
+    --flag_debug "OFF" \
+    --p_out_eval "/path/of/output/file.tsv" \
+    --flag_singularity "ON" \
+    --p_singularity_img "/path/of/singularity/container/s_neteval" \
+    --p_singularity_bindpath "/home/"
 ```
-    
-    /zev.tsv --p_singularity_img /path/of/singularity/container --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_go.tsv ` 
-### Binding data
-- For info & help about the command:
-
-`$ /path/of/singularity/container/home/NET-evaluate_with_binding -h`
-
-- To run the command, you can start with this toy example:
-
-`$ /path/of/singularity/container/home/NET-evaluation/evaluate_with_binding --p_net /path/of/singularity/container/home/toy_example/zev.tsv --p_singularity_img /path/of/singularity/container/ --p_singularity_bindpath /path/of/output/directory/ --p_eval /path/of/output/directory/zev_binding.tsv`
-
-# II. More advanced, install all dependencies
+# II. The more advanced, by installing all dependencies
 ## 1. Install required packages
-### Install R and depedencies
-`R>=3.4.4`, refer to [this](https://www.datacamp.com/community/tutorials/installing-R-windows-mac-ubuntu) tutorial on how to install R
+- Install anaconda3 and create environment and call it np3. Refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
+- The list of libraries requiered for np3 are in [fill in the url]
+- For GO analysis, GO-Term-Finder v0.86 has to be install it 
+- For running the binding command outside the singularity container:
 
-Once R is installed, install required packages, run:
-
-`$ R`
-
-`install.packages("WebGestaltR")`
-
-`install.packages("rjson")`
-
-`install.packages("optparse")`
-
-### Install python and dependencies
-To install python via Anaconda 3, refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
-
-Once anaconda 3 is installed, run:
-
-`$ conda create -n neteval python=3.7 pandas`
-
-`$ conda activate neteval`
-
-## 2. Run Commands
-### GO enrichement analysis
-- For info & help about the command:
-
-`$ /path/of/code/NET-evaluate/evaluate_with_go -h`
-
-- To run the command, you can start with this toy example:
-
-`$ /path/of/code/NET-evaluation/evaluate_with_go --p_net /path/of/code/NET-evaluation/toy_example/zev.tsv --flag_singularity OFF --p_eval /path/of/output/directory/zev_go.tsv ` 
-### With Binding data
-- For info & help about the command:
-
-`$ /path/of/code/NET-evaluation/evaluate_with_binding -h`
-
-- To run the command, you can start with this toy example:
-
-`$ /path/of/code/NET-evaluation/evaluate_with_binding --p_net /path/of/code/NET-evaluation/toy_example/zev.tsv --flag_singularity OFF --p_eval /path/of/output/directory/zev_binding.tsv`
+```
+$ ${p_src_code}binding \
+    --p_in_net "${p_src_code}toy_example/zev.tsv" \
+    --nbr_top_edges 50 \
+    --nbr_edges_per_threshold 5 \
+    --p_binding_event "${p_src_code}metadata/yeast/reg_target_cc_exo_chip_exclusive.txt" \
+    --conda_env "np3" \
+    --flag_debug "OFF" \
+    --p_out_eval "/path/of/output/file.tsv" \
+    --flag_singularity "OFF" \
