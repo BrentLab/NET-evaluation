@@ -24,7 +24,7 @@ There are four different evaluation commands for (1) binding, (2) GO, (3) GO-dir
 - For running the binding command:
 
 ```
-$ ${p_src_code}binding \
+${p_src_code}binding \
     --p_in_net "${p_src_code}toy_example/zev.tsv" \
     --nbr_top_edges 50 \
     --nbr_edges_per_threshold 5 \
@@ -43,7 +43,7 @@ $ ${p_src_code}binding \
 - For running the binding command outside the singularity container:
 
 ```
-$ ${p_src_code}binding \
+${p_src_code}binding \
     --p_in_net "${p_src_code}toy_example/zev.tsv" \
     --nbr_top_edges 50 \
     --nbr_edges_per_threshold 5 \
