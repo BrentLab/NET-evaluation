@@ -12,14 +12,16 @@ A package for network evaluation, we provide three independent evaluation metric
 ## 3. Run Commands
 There are four different evaluation commands for (1) binding, (2) GO, (3) GO-directness and (4) PPI. There is a sample code for running each of the commands in `toy_example/run.sh`. Below, we only explain the binding command in details, but the other commands follow the same principles. 
 
-- For command help:
+- For help:
 
 `p_src_code="/path/of/code/that/was/cloned/from/github/repository"`
 
-`$ ${p_src_code}binding -h`        # for binding
-`$ ${p_src_code}go -h`             # for GO
-`$ ${p_src_code}go_directness -h`  # for GO-directness
-`$ ${p_src_code}ppi -h`            # for ppi
+```
+${p_src_code}binding -h # for binding
+${p_src_code}go -h  # for GO
+${p_src_code}go_directness -h  # for GO-directness
+${p_src_code}ppi -h  # for ppi
+```
 
 - For running the binding command:
 
