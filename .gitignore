@@ -9,3 +9,4 @@ packages/
 code/__pycache__/
 code/.ipynb_checkpoints/
 test/
+metadata/human/
