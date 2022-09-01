@@ -143,7 +143,6 @@ run_go_term_finder(){
 nbr_cpu=$((( $(nproc --all) <= 5 )) && echo "$(nproc --all)" || echo "5")
 for (( i=0;i<${#l_nbr_edges_per_reg[@]}; i++ ))
 do
-    echo "nbr_edges_per_reg: ${l_nbr_edges_per_reg[i]}"
     run_go_term_finder ${l_nbr_edges_per_reg[i]} &
     
     jobs_running=$(jobs -p | wc -l)

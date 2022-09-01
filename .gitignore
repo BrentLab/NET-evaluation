@@ -4,6 +4,7 @@ singularity/s_neteval
 singularity/s_neteval.tar.gz
 singularity/old
 singularity/zev_go.tsv
+singularity/s_neteval.sif
 old/
 packages/
 code/__pycache__/
