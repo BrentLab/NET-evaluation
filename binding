@@ -14,7 +14,7 @@ cat << EOF
     --nbr_top_edges           : number of top (TF, target) edges that will be evaluated (optional, default 50)
     --nbr_edges_per_threshold : number of (TF, target) edges evaluated in the first threshold (optional, default 5)
     --p_binding_event         : path of binding file, two-columns tab separated file for regulators and targets. These are the edges that have evidence of direct binding by experiments of binding such as ChIP-Chip (mandatory)
-    --conda_env               : conda environment that will be used (mandatory, if flag_singularity is OFF)
+    --conda_env               : conda environment that will be used (optional)
     --p_out_eval              :  path of output file for evaluation (mandatory)
     --flag_debug              : ON or OFF, if ON the bash command is printed
     
