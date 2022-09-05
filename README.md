@@ -4,7 +4,8 @@ A package for network evaluation, we provide three independent evaluation metric
 # I. The easiet, with the Singularity container
 ## 1. Install Singularity and download the container
 - Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity >= 3.5.2
-- Download singularity container [to check instructions in NP3 package page]
+- Pull the singularity container: `singularity pull --arch amd64 library://dabid/default/s_neteval:sha256.5bbd71f6303bc98d302e089e50bdcc91a3f92e0adf723883ed5a24d41a5a469f`
+- Rename the container with a shorted name, so it is easier to call: `mv s_neteval_sha256.5bbd71f6303bc98d302e089e50bdcc91a3f92e0adf723883ed5a24d41a5a469f.sif s_neteval.sif`
 
 ## 2. Clone NET-evaluation repository
 `git clone https://github.com/BrentLab/NET-evaluation.git`
