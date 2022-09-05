@@ -61,7 +61,7 @@ From: ubuntu:18.04
 # 1. create an account with sylabs, 2. an access token, then 3. push it to clould
 # Refer to this page to create an account and access token: https://sylabs.io/guides/3.3/user-guide/cloud_library.html
 # To be able to push the container to clould, first it needs to be packaged in sif file
-# sudo singularity build s_neteval.sif s_neteval
+# sudo singularity build s_neteval.sif recipe.txt
 # singularity remote login SylabsClould
 # singularity push -U s_neteval.sif library://dabid/default/s_neteval
 # to get back the original folder (not a sif version of it)
