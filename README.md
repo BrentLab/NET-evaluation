@@ -3,7 +3,7 @@ A package for network evaluation, we provide three independent evaluation metric
 
 # I. The easiet, with the Singularity container
 ## 1. Install Singularity and download the container
-- Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity >= 3.6.2
+- Refer to Singularity [website](https://singularity.lbl.gov/install-linux) to install singularity >= 3.5.2
 - Download singularity container [to check instructions in NP3 package page]
 
 ## 2. Clone NET-evaluation repository
