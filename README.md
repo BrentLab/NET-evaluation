@@ -15,7 +15,7 @@ There are four different evaluation commands for (1) binding, (2) GO, (3) GO-dir
 
 - For help:
 
-`p_src_code="/path/of/code/that/was/cloned/from/github/repository"`
+`p_src_code="/path/of/code/that/was/cloned/from/github/repository/"`
 
 ```
 ${p_src_code}binding -h # for binding
