@@ -32,7 +32,6 @@ ${p_src_code}binding \
     --nbr_top_edges 50 \
     --nbr_edges_per_threshold 5 \
     --p_binding_event "${p_src_code}metadata/yeast/reg_target_cc_exo_chip_exclusive.txt" \
-    --flag_debug "OFF" \
     --p_out_eval "/path/of/output/file.tsv" \
     --flag_singularity "ON" \
     --p_singularity_img "/path/of/singularity/container/s_neteval" \
@@ -42,7 +41,8 @@ ${p_src_code}binding \
 ## 1. Install required packages
 - Install anaconda3 and create environment and call it <i>neteval</i>. Refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
 - Install python3.6 and pandas within the environment <i>neteval</i> 
-- For GO analysis, GO-Term-Finder v0.86 has to be install it 
+- For GO analysis, install GO-Term-Finder [v0.86](https://metacpan.org/dist/GO-TermFinder)
+    - GO analysis, we need gene ontology files, specifically <i>p_gene_association</i> (gaf) and <i>p_gene_ontology</i> (obo) files can be downloaded from [gene ontology](http://geneontology.org) website.
 - For running the binding command outside the singularity container:
 
 ```
