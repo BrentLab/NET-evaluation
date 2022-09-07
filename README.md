@@ -40,8 +40,8 @@ ${p_src_code}binding \
 ```
 # II. The more advanced, by installing all dependencies
 ## 1. Install required packages
-- Install anaconda3 and create environment and call it np3. Refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
-- The list of libraries requiered for np3 are in [fill in the url]
+- Install anaconda3 and create environment and call it <i>neteval</i>. Refer to anaconda [website](https://docs.anaconda.com/anaconda/install/) on how to install anaconda
+- Install python3.6 and pandas within the environment <i>neteval</i> 
 - For GO analysis, GO-Term-Finder v0.86 has to be install it 
 - For running the binding command outside the singularity container:
 
