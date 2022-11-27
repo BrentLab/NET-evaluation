@@ -17,6 +17,8 @@ def calculate_performance_for_defined_bins(p_net
     import numpy as np
     import multiprocessing as mp
     from os import listdir
+    import os
+    
     
     # get the set of regulators after reading network
     df_net = read_csv(p_net, header=None, sep='\t')
@@ -30,17 +32,25 @@ def calculate_performance_for_defined_bins(p_net
     for nbr_edges_per_reg in l_nbr_edges_per_reg:
         p_dir = p_dir_results + 'bin_' + str(nbr_edges_per_reg) + '/'
         l_pvalue = pool.starmap(collect_l_pvalue, [(p_dir + tf_file, ) for tf_file in listdir(p_dir) if tf_file.endswith('.tsv')])
-        # calcualte stats
-        l_sum_pvalue.append(sum(-np.log(l_pvalue)))
-        l_mean_pvalue.append(mean(-np.log(l_pvalue)))
-        l_median_pvalue.append(median(-np.log(l_pvalue)))
-        l_nbr_tf.append(len(l_pvalue))
+        if not l_pvalue:
+            l_sum_pvalue.append('na')
+            l_mean_pvalue.append('na')
+            l_median_pvalue.append('na')
+            l_nbr_tf.append('na')
+        else:  # calcualte stats
+            l_sum_pvalue.append(sum(-np.log(l_pvalue)))
+            l_mean_pvalue.append(mean(-np.log(l_pvalue)))
+            l_median_pvalue.append(median(-np.log(l_pvalue)))
+            l_nbr_tf.append(len(l_pvalue))
     pool.close()
     pool.join()
         
         
-
-    DataFrame([l_sum_pvalue, l_mean_pvalue, l_median_pvalue, l_nbr_tf], index=['sum', 'mean', 'median', 'nbr_tf']).T.to_csv(p_eval, header=True, index=False, sep='\t')       
+    if p_eval != 'NONE':
+        p_dir, file_name = os.path.split(p_eval)
+        if not os.path.exists(p_dir):
+            os.makedirs(p_dir)
+        DataFrame([l_sum_pvalue, l_mean_pvalue, l_median_pvalue, l_nbr_tf], index=['sum', 'mean', 'median', 'nbr_tf']).T.to_csv(p_eval, header=True, index=False, sep='\t')       
 
 
 def main():

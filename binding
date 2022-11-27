@@ -14,11 +14,7 @@ cat << EOF
     --nbr_top_edges           : number of top (TF, target) edges that will be evaluated (optional, default 50)
     --nbr_edges_per_threshold : number of (TF, target) edges evaluated in the first threshold (optional, default 5)
     --p_binding_event         : path of binding file, two-columns tab separated file for regulators and targets. These are the edges that have evidence of direct binding by experiments of binding such as ChIP-Chip (mandatory)
-<<<<<<< HEAD
-    --conda_env               : conda environment that will be used (optional)
-=======
-    --conda_env               : conda environment that will be used (mandatory, if flag_singularity is OFF)
->>>>>>> d11d4ca1175ecb1ce8361e681bb766232818f1db
+    --conda_env               : conda environment that will be used (neteval) (mandatory, if flag_singularity is OFF)
     --p_out_eval              :  path of output file for evaluation (mandatory)
     --flag_debug              : ON or OFF, if ON the bash command is printed
     
@@ -40,13 +36,14 @@ EOF
 nbr_top_edges=50
 nbr_edges_per_threshold=5
 p_src_code="$(cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)/"
-conda_env=np3
+conda_env=neteval
 p_binding_event=NONE
 flag_slurm=OFF
 flag_singularity=ON
 p_singularity_bindpath=/home/
 p_singularity_img=NONE
 flag_debug=OFF
+data=""
 
 # ======================================================== #
 # |               *** Parse Arguments ***                | #
@@ -78,6 +75,9 @@ do
                      ;;
                  flag_debug)
                      flag_debug="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
+                 data)
+                     data="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
                      
                  # output    
@@ -119,7 +119,7 @@ then
     command+="sbatch 
             -o ${p_out_logs}eval_binding_%J.out \
             -e ${p_out_logs}eval_binding_%J.err \
-            -J eval_with_binding "
+            -J eval_with_binding_${data} "
 fi
 
 if [ ${p_binding_event} == "NONE" ]

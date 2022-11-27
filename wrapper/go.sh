@@ -96,6 +96,9 @@ run_go_term_finder(){
     fi
 
     # CMD: create files
+    if [ -d ${p_out_dir}bin_${nbr_edges_per_reg} ]; then
+        rm -r ${p_out_dir}bin_${nbr_edges_per_reg}
+    fi
     cmd_create_files+="python3 ${p_src_code}code/go/step1_create_target_gene_files_for_every_tf.py \
         --p_in_net ${p_in_net} \
         --p_out_dir ${p_out_dir}bin_${nbr_edges_per_reg}/ \

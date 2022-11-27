@@ -16,7 +16,7 @@ cat << EOF
     --threshold               : the threshold that will be used to define the top edges that will be evaluated (optinal, default 25)
     --p_STRING_db             : path of string database file downloaded from https://string-db.org (optional). There a sample of this file in the metadata folder (4932.protein.links.v11.5.txt)
     --STRING_confidence       : threshold on STRING score, so an edge is considered supported
-    --conda_env               : conda environment that will be used (optional)
+    --conda_env               : conda environment that will be used (neteval) (mandatory, if flag_singularity is OFF)
     --p_out_eval              : path of output file for evaluation (mandatory)
     --flag_debug              : ON or OFF, if ON commands will be printed so debuging is easier (optional, default OFF)
     
@@ -39,7 +39,7 @@ nbr_top_edges=100
 nbr_edges_per_threshold=10
 threshold=25
 p_src_code="$(cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd)/"
-conda_env=np3
+conda_env=neteval
 p_STRING_db=NONE
 STRING_confidence=700
 flag_slurm=OFF
@@ -47,6 +47,7 @@ flag_singularity=ON
 p_singularity_bindpath=/home/
 p_singularity_img=NONE
 flag_debug=OFF
+data=""
 
 # ======================================================== #
 # |               *** Parse Arguments ***                | #
@@ -88,6 +89,9 @@ do
                  flag_debug)
                      flag_debug="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
+                 data)
+                     data="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
                      
                  # SLURM arguments
                  flag_slurm)
@@ -123,7 +127,7 @@ then
     command+="sbatch 
             -o ${p_out_logs}eval_ppi_%J.out \
             -e ${p_out_logs}eval_ppi_%J.err \
-            -J eval_with_ppi "
+            -J eval_with_ppi_${data} "
 fi
 
 if [ ${p_STRING_db} == "NONE" ]

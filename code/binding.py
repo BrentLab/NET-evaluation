@@ -14,6 +14,8 @@ def evaluate(p_in_net
     
     from pandas import read_csv, DataFrame, melt
     from json import load
+    import os
+    
 
     # ===================================================================== #
     # |                       *** Read Input Data ***                     | #
@@ -72,7 +74,10 @@ def evaluate(p_in_net
                                 ]
                        )
     
-    if p_out_eval:
+    if p_out_eval != 'NONE':
+        p_dir, file_name = os.path.split(p_out_eval)
+        if not os.path.exists(p_dir):
+            os.makedirs(p_dir)
         df_eval.iloc[:, 0].round(0).to_csv(p_out_eval, header=False, index=True, sep='\t')
     return df_eval.round(0)
 

@@ -11,4 +11,6 @@ packages/
 code/__pycache__/
 code/.ipynb_checkpoints/
 test/
+toy_example/logs/
+toy_example/net_eval/
 metadata/human/

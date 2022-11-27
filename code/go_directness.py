@@ -12,10 +12,10 @@ def calculate_percentage_support(p_dir_go
             df_go_sorted = df_go.sort_values(ascending=True, by='CORRECTED P-VALUE')
             l_genes = df_go_sorted.iloc[0, 10].split(', ')
             l_edges = [(tf, g) for g in l_genes]
-            perc_support = sum([1 if e in l_binding else 0 for e in l_edges])*100/len(l_edges)
+            perc_support = sum([1 if e in l_binding else 0 for e in l_edges])*100/len(l_edges) if len(l_edges) != 0 else 0
             l_perc_support.append(perc_support)
         
-    return sum(l_perc_support)/len(l_perc_support)
+    return sum(l_perc_support)/len(l_perc_support) if len(l_perc_support) != 0 else 0
     
 
 def evaluate(p_in_dir_go
@@ -26,6 +26,7 @@ def evaluate(p_in_dir_go
             ):
     import multiprocessing as mp
     from pandas import read_csv, DataFrame
+    import os
     
     # read binding event file and pull supported edges
     df_binding = read_csv(p_binding_event, header=0, sep='\t')
@@ -43,6 +44,9 @@ def evaluate(p_in_dir_go
     pool.join()
     
     if p_out_eval != 'NONE':
+        p_dir, file_name = os.path.split(p_out_eval)
+        if not os.path.exists(p_dir):
+            os.makedirs(p_dir)
         DataFrame(l_res
                   , index=[i for i in range(nbr_edges_per_threshold
                                             , nbr_top_edges+1
