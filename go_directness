@@ -26,6 +26,7 @@ cat << EOF
     SLURM arguments
     --flag_slurm              : ON or OFF, for SLURM run (optional, default OFF)
     --p_out_logs              : path of directory for SLURM log files (mandatory, only if flag_slurm is ON)
+    --jobid_dependency        : jobid for setting dependencies
     
 EOF
 }
@@ -44,6 +45,7 @@ p_singularity_bindpath=/home/
 p_singularity_img=NONE
 flag_debug=OFF
 data=""
+jobid_dependency=NONE
 
 # ======================================================== #
 # |               *** Parse Arguments ***                | #
@@ -92,6 +94,9 @@ do
                  p_out_logs)
                      p_out_logs="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
                      ;;
+                 jobid_dependency)
+                     jobid_dependency="${!OPTIND}"; OPTIND=$(( ${OPTIND} + 1 ))
+                     ;;
                  
                  # SINGULARITY arguments
                  flag_singularity)
@@ -116,10 +121,21 @@ command=""
 if [ ${flag_slurm} == "ON" ]
 then
     mkdir -p ${p_out_logs}
-    command+="sbatch 
-            -o ${p_out_logs}eval_go_directness_%J.out \
-            -e ${p_out_logs}eval_go_directness_%J.err \
-            -J eval_with_go_directness_${data} "
+    if [ ${jobid_dependency} == "NONE" ]
+    then
+        command+="sbatch 
+                -o ${p_out_logs}eval_go_directness_%J.out \
+                -e ${p_out_logs}eval_go_directness_%J.err \
+                --mem=4G \
+                -J eval_with_go_directness_${data} "
+    else
+        command+="sbatch 
+                -o ${p_out_logs}eval_go_directness_%J.out \
+                -e ${p_out_logs}eval_go_directness_%J.err \
+                --mem=4G \
+                --dependency=afterok:${jobid_dependency} \
+                -J eval_with_go_directness_${data} "
+    fi
 fi
 
 if [ ${p_binding_event} == "NONE" ]
