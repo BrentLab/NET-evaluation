@@ -169,7 +169,12 @@ then
     cmd_calculate_performance+="singularity exec ${p_singularity_img} "
 fi
     
-cmd_calculate_performance+="python3 ${p_src_code}code/go/step4_calculate_performance_for_defined_bins.py \
+#cmd_calculate_performance+="python3 ${p_src_code}code/go/step4_calculate_performance_for_defined_bins.py \
+#                           --p_in_net ${p_in_net} \
+#                           --p_out_dir ${p_out_dir} \
+#                           --l_nbr_edges_per_reg ${l_nbr_edges_per_reg[@]} \
+#                           --p_out_eval ${p_out_eval}"
+cmd_calculate_performance+="python3 ${p_src_code}code/go/step4_calculate_performance_for_defined_bins_nlog10p_with_penalty.py \
                            --p_in_net ${p_in_net} \
                            --p_out_dir ${p_out_dir} \
                            --l_nbr_edges_per_reg ${l_nbr_edges_per_reg[@]} \

@@ -70,6 +70,8 @@ if __name__ == "__main__":
     parser.add_argument('--nbr_edges_per_threshold', '-nbr_edges_per_threshold', type=int, nargs='?', default=5, help='number of edges per threshold')
     parser.add_argument('--p_out_eval', '-p_out_eval', help='path of file for evaluation results')
     args = parser.parse_args()
+
+    print(f" number of top edges: {args.nbr_top_edges} ")
     
     evaluate(p_in_dir_go=args.p_in_dir_go
              , p_binding_event=args.p_binding_event
